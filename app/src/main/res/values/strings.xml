@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MovieApp</string>
+    <string name="menu_item_search_title">Найти</string>
+    <string name="menu_item_profile_title">Профиль</string>
+</resources>
