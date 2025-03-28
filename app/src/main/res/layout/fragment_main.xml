@@ -14,6 +14,8 @@
         android:background="@drawable/bottom_bar_rounded_rectangle"
         app:itemPaddingBottom="18dp"
         app:itemPaddingTop="18dp"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

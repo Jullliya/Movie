@@ -1,8 +1,14 @@
 package dev.jullls.movieapp.domain.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Film(
-    val id: Long,
-    val image: Int,
-    val name: String,
-    val year: String
-)
+    @SerializedName("id") val id: Long,
+    @SerializedName("poster") val poster: Poster?,
+    @SerializedName("name") val name: String?,
+    @SerializedName("year") val year: String?
+) {
+    fun getPosterUrl(): String? {
+        return poster?.url
+    }
+}

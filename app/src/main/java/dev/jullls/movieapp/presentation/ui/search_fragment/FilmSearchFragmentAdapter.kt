@@ -3,22 +3,31 @@ package dev.jullls.movieapp.presentation.ui.search_fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import dev.jullls.movieapp.R
 import dev.jullls.movieapp.databinding.ItemFilmBinding
 import dev.jullls.movieapp.domain.model.Film
 
-class FilmSearchFragmentAdapter(private val filmList: List<Film>) :
-    RecyclerView.Adapter<FilmSearchFragmentAdapter.FilmViewHolder>() {
+class FilmSearchFragmentAdapter :
+    ListAdapter<Film, FilmSearchFragmentAdapter.FilmViewHolder>(FilmDiffCallback()) {
 
     class FilmViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = ItemFilmBinding.bind(view)
 
         fun bind(film: Film) {
             with(binding) {
-                ivItemPoster.setImageResource(film.image)
-                tvItemName.text = film.name
-                tvItemYear.text = film.year
+                film.getPosterUrl()?.let { url ->
+                    Glide.with(ivItemPoster.context)
+                        .load(url)
+                        .placeholder(R.drawable.poster_placeholder)
+                        .into(ivItemPoster)
+                }
+
+                tvItemName.text = film.name ?: "Название неизвестно"
+                tvItemYear.text = film.year ?: "Год неизвестен"
             }
         }
     }
@@ -30,12 +39,17 @@ class FilmSearchFragmentAdapter(private val filmList: List<Film>) :
         return FilmViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return filmList.size
+    override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+}
+
+class FilmDiffCallback : DiffUtil.ItemCallback<Film>() {
+    override fun areItemsTheSame(oldItem: Film, newItem: Film): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
-        val actor = filmList[position]
-        holder.bind(actor)
+    override fun areContentsTheSame(oldItem: Film, newItem: Film): Boolean {
+        return oldItem == newItem
     }
 }

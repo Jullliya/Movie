@@ -5,59 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import dev.jullls.movieapp.R
 import dev.jullls.movieapp.databinding.FragmentSearchBinding
-import dev.jullls.movieapp.domain.model.Film
+import dev.jullls.movieapp.presentation.ui.vm.FilmsViewModel
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-
-    private val filmListSearch = listOf(
-        Film(
-            1,
-            R.drawable.film_1,
-            "Experience the Serenity of Japan's Traditional Countryside",
-            "Technology"
-        ),
-        Film(
-            2,
-            R.drawable.film_1,
-            "Discovering the Magic of Paris: A Journey through",
-            "Technology"
-        ),
-        Film(
-            3,
-            R.drawable.film_1,
-            "Experience the Serenity of Japan's Traditional Countryside",
-            "Technology"
-        ),
-        Film(
-            4,
-            R.drawable.film_1,
-            "Discovering the Magic of Paris: A Journey through",
-            "Technology"
-        ),
-        Film(
-            5,
-            R.drawable.film_1,
-            "Experience the Serenity of Japan's Traditional Countryside",
-            "Technology"
-        ),
-        Film(
-            6,
-            R.drawable.film_1,
-            "Discovering the Magic of Paris: A Journey through",
-            "Technology"
-        ),
-        Film(
-            7,
-            R.drawable.film_1,
-            "Experience the Serenity of Japan's Traditional Countryside",
-            "Technology"
-        )
-    )
+    private val viewModel: FilmsViewModel by viewModels()
+    private lateinit var adapter: FilmSearchFragmentAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,37 +23,44 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
-        setupListeners()
+        setupObservers()
+        viewModel.loadTop250()
     }
 
-    private fun setupListeners() {
-//        with(binding) {
-//            btnMenuExploreFragmentHome.setOnClickListener {
-//                findNavController().navigate(R.id.action_navigation_bookmark_to_navigation_explore)
-//            }
-//            btnMenuBookmarkFragmentHome.setOnClickListener{
-//                findNavController().navigate(R.id.action_navigation_home_to_navigation_bookmark)
+    private fun setupObservers() {
+        viewModel.films.observe(viewLifecycleOwner) { films ->
+            films?.let {
+                adapter.submitList(it)
+            }
+        }
+
+//        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+//            // Здесь можно добавить обработку состояния загрузки
+//        }
+//
+//        viewModel.error.observe(viewLifecycleOwner) { error ->
+//            error?.let {
+//                // Здесь можно показать ошибку пользователю
 //            }
 //        }
     }
 
-    private fun setupUI(){
+    private fun setupUI() {
         setupRecyclerFilmsSearch()
     }
 
-    private fun setupRecyclerFilmsSearch(){
+    private fun setupRecyclerFilmsSearch() {
         with(binding) {
             rvFilms.setHasFixedSize(true)
-            rvFilms.layoutManager =
-                GridLayoutManager(requireContext(), 2)
-            rvFilms.adapter = FilmSearchFragmentAdapter(filmListSearch)
+            rvFilms.layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = FilmSearchFragmentAdapter()
+            rvFilms.adapter = adapter
         }
     }
 

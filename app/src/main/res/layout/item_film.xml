@@ -40,7 +40,7 @@
             android:layout_width="143dp"
             android:layout_height="212dp"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/film_1" />
+            app:srcCompat="@drawable/poster_placeholder" />
 
     </androidx.cardview.widget.CardView>
 
@@ -48,10 +48,9 @@
         android:id="@+id/tv_item_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/muli_light"
-        android:text="8.1"
+        android:text="1999"
         android:textColor="#9C9C9C"
         android:textColorLink="#9C9C9C"
         android:textSize="12sp"
@@ -59,14 +58,5 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_item_name">
 
     </TextView>
-
-<!--    <ImageView-->
-<!--        android:id="@+id/iv_item_now_showing_star"-->
-<!--        android:layout_width="12dp"-->
-<!--        android:layout_height="12dp"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tv_item_name"-->
-<!--        app:srcCompat="@drawable/star" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

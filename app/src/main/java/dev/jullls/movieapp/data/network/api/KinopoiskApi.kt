@@ -1,26 +1,46 @@
 package dev.jullls.movieapp.data.network.api
 
-import dev.jullls.movieapp.data.network.dto.FilmResponseDto
+import dev.jullls.movieapp.domain.model.FilmResponse
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
 
-//interface KinopoiskApi {
-//
-//    @GET(FILM_ENDPOINT)
-//    fun getFilms(
-//        @Query(PAGE_PARAMETR) page: Int = PAGE_COUNT,
-//        @Query(LIMIT_PARAMETR) limit: Int = MAX_PAGE_SIZE_VALUE,
-//        @Query(SELECTED_FIELDS_PARAMETR) selectFields: List<String> = SELECTED_FIELDS
-//    ): Single<FilmResponseDto>
-//
-//    companion object {
-//        const val BASE_URL = "https://api.kinopoisk.dev/v1.4/"
-//        const val API_KEY = "2JZTBMF-B4TM89H-K2HZM4A-ZX8PKRF"
-//        const val API_KEY_PARAMETER = "X-API-KEY"
-//        private const val FILM_ENDPOINT = "movie"
-//        const val MAX_PAGE_SIZE_VALUE = 10
-//        private const val PAGE_COUNT = 1
-//        private const val PAGE_PARAMETR = "page"
-//        private const val LIMIT_PARAMETR = "limit"
-//        private const val SELECTED_FIELDS_PARAMETR = "selectFields"
-//        private val SELECTED_FIELDS = listOf("id", "name", "year", "poster")
-//    }
-//}
+interface KinopoiskApi {
+    @GET("v1.4/movie")
+    suspend fun getTop250(
+        @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 250,
+        @Query("selectFields") selectFields: List<String> = listOf("id", "name", "year", "poster"),
+        @Query("top250") top250: Boolean? = true
+    ): FilmResponse
+
+    companion object {
+        const val BASE_URL = "https://api.kinopoisk.dev/"
+        const val API_KEY = "2JZTBMF-B4TM89H-K2HZM4A-ZX8PKRF"
+    }
+}
+
+object RetrofitClient {
+    private val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                .addHeader("X-API-KEY", KinopoiskApi.API_KEY)
+                .build()
+            chain.proceed(request)
+        }
+        .addInterceptor(HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        })
+        .build()
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(KinopoiskApi.BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val api: KinopoiskApi = retrofit.create(KinopoiskApi::class.java)
+}
