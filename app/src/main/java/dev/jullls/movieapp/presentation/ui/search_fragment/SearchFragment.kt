@@ -39,16 +39,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 adapter.submitList(it)
             }
         }
-
-//        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-//            // Здесь можно добавить обработку состояния загрузки
-//        }
-//
-//        viewModel.error.observe(viewLifecycleOwner) { error ->
-//            error?.let {
-//                // Здесь можно показать ошибку пользователю
-//            }
-//        }
     }
 
     private fun setupUI() {

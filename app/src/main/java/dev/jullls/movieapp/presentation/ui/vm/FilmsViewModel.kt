@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.jullls.movieapp.data.network.api.RetrofitClient
+import dev.jullls.movieapp.data.network.RetrofitClient
 import dev.jullls.movieapp.domain.model.Film
 import kotlinx.coroutines.launch
 
